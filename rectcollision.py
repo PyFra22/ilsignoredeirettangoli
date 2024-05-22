@@ -1,6 +1,6 @@
 import pygame as pyg
 import random as rm
-#import time as tm
+import time as tm
 
 pyg.init()
 
@@ -24,12 +24,12 @@ window = pyg.display.set_mode((width, height))
 clock = pyg.time.Clock()
 running = True
 
-font_text1 = pyg.font.Font('freesansbold.ttf', 18)
-text_life = font_text1.render("Vita totale: ", False, color_black)
-textRect1 = text_life.get_rect()
-textRect1.center = (width/1.2, height/12)
+font_text_tot_life = pyg.font.Font('freesansbold.ttf', 18)
+text_life = font_text_tot_life.render("Vita totale: ", False, color_black)
+textRect_tot_life = text_life.get_rect()
+textRect_tot_life.center = (width/1.2, height/12)
 
-font_text2 = pyg.font.Font('freesansbold.ttf', 18)
+font_text_number_of_life = pyg.font.Font('freesansbold.ttf', 18)
 
 
 main_rectangle = pyg.Rect(0, 0, 30, 30)
@@ -37,7 +37,7 @@ main_rectangle = pyg.Rect(0, 0, 30, 30)
 pyg.mouse.set_visible(False)
 
 while running:
-
+    
     window.fill("white")
 
     rectangle_color = color_green
@@ -46,24 +46,35 @@ while running:
             total_live -= 1
             rectangle_color = color_red
 
-    text_number = font_text2.render(str(total_live), False, color_black)
-    textRect2 = text_number.get_rect()
-    textRect2.center = (width/1.1, height/12)
+    text_number_of_life = font_text_number_of_life.render(str(total_live), False, color_black)
+    textRect_number_of_life = text_number_of_life.get_rect()
+    textRect_number_of_life.center = (width/1.1, height/12)
     
     if total_live < 0:
         total_live = 0
     
-    window.blit(text_number, textRect2)           
-    window.blit(text_life, textRect1)
+    window.blit(text_number_of_life, textRect_number_of_life)           
+    window.blit(text_life, textRect_tot_life)
 
     
     for obstacle in obstacles:
         pyg.draw.rect(window, color_blue, obstacle)
+        
 
     position_of_mouse = pyg.mouse.get_pos()
     main_rectangle.center = position_of_mouse
 
     pyg.draw.rect(window, rectangle_color, main_rectangle)
+
+    if total_live == 0:
+        window.fill("black")
+        font_text_lose = pyg.font.Font('freesansbold.ttf', 48)
+        text_lose = font_text_lose.render("HAI PERSO", False, "white")
+        textRect_lose = text_lose.get_rect()
+        textRect_lose.center = (width/2, height/3)
+        window.blit(text_lose, textRect_lose)
+        
+        
 
     exit_pressed = pyg.key.get_pressed()
 
