@@ -10,11 +10,14 @@ color_green = (0, 255, 0)
 color_blue = (0, 0, 255)
 color_black = (0, 0, 0)
 color_white = (255, 255, 255)
+color_light = (170,170,170) 
+color_dark = (100,100,100)
+
 
 obstacles = []
-for _ in range(36):
+for _ in range(45):
     obstacle_rectangle = pyg.Rect(
-        rm.randint(0, 600), rm.randint(0, 250), 25, 25)
+    rm.randint(0, 600), rm.randint(0, 250), 25, 25)
     obstacles.append(obstacle_rectangle)
 
 total_live = 100
@@ -37,12 +40,12 @@ main_rectangle = pyg.Rect(0, 0, 30, 30)
 font_quit_button = pyg.font.SysFont("Arial", 24)
 text_quit_button = font_quit_button.render("QUIT", True, color_white)
 text_quit_rect = text_quit_button.get_rect()
-text_quit_rect.center = (width/2, height/2)
+text_quit_rect.center = (width/1.6, height/2)
 
-font_retry_button = pyg.font.SysFont("Times New Roman", 24)
+font_retry_button = pyg.font.SysFont("Arial", 24)
 text_retry_button = font_retry_button.render("TRY AGAIN", True, color_white)
 text_retry_rect = text_retry_button.get_rect()
-text_retry_rect.center = (width/2, height/1.5)
+text_retry_rect.center = (width/2.6, height/2)
 
 pyg.mouse.set_visible(False)
 
@@ -91,20 +94,16 @@ while running:
         if event.type == pyg.QUIT:
             running = False   
         if event.type == pyg.MOUSEBUTTONDOWN:
-            if width/2 <= position_of_mouse[0] <= width/2+120 and height/2 <= position_of_mouse[1] <= height/2+35: 
-                pyg.quit()
-            if width/2 <= position_of_mouse[0] <= width/2+120 and height/2 <= position_of_mouse[1] <= height/2+35:
+            if width/2.6 <= position_of_mouse[0] <= width/2.6+100 and height/2 <= position_of_mouse[1] <= height/2+35: 
                 total_live = 100
+                obstacles = []
+                for _ in range(45):
+                        obstacle_rectangle = pyg.Rect(rm.randint(0, 600), rm.randint(0, 250), 25, 25)
+                        obstacles.append(obstacle_rectangle)
+            if width/1.6 <= position_of_mouse[0] <= width/1.6+100 and height/2 <= position_of_mouse[1] <= height/2+35:
+                running = False
         
-    exit_pressed = pyg.key.get_pressed()
-
-    if exit_pressed[pyg.K_ESCAPE]:
-        running = False
-
     pyg.display.flip()
     dt = clock.tick(60)/1000
-
-
-
 
 pyg.quit()
