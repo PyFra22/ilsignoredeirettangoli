@@ -15,9 +15,9 @@ color_dark = (100,100,100)
 
 
 obstacles = []
-for _ in range(45):
+for _ in range(60):
     obstacle_rectangle = pyg.Rect(
-    rm.randint(0, 600), rm.randint(0, 250), 25, 25)
+    rm.randint(0, 575), rm.randint(50, 275), 25, 25)
     obstacles.append(obstacle_rectangle)
 
 total_live = 100
