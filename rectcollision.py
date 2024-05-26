@@ -42,6 +42,11 @@ text_quit_button = font_quit_button.render("QUIT", True, color_white)
 text_quit_rect = text_quit_button.get_rect()
 text_quit_rect.center = (width/2, height/2)
 
+font_text_retry = pyg.font.SysFont("Arial", 16)
+text_retry = font_text_retry.render("PREMERE R PER UNA NUOVA PARTITA", True, color_white)
+text_retry_rect = text_retry.get_rect()
+text_retry_rect.center = (width/2, height/1.75)
+
 pyg.mouse.set_visible(False)
 
 border_outside_rectangle = pyg.Rect(0, 300 , 800, 125)
@@ -90,6 +95,7 @@ while running:
         window.blit(text_lose, textRect_lose)
         pyg.mouse.set_visible(True)
         window.blit(text_quit_button, text_quit_rect)
+        window.blit(text_retry, text_retry_rect)
         
     retry_button = pyg.key.get_pressed()
     exit_button = pyg.key.get_pressed()
@@ -106,6 +112,9 @@ while running:
     for event in pyg.event.get():
         if event.type == pyg.QUIT:
             running = False
+        if event.type == pyg.MOUSEBUTTONDOWN:
+            if width/2 <= position_of_mouse[0] <= width/2+100 and height/2 <= position_of_mouse[1] <= height/2+25: 
+                pyg.quit()
         
     pyg.display.flip()
     dt = clock.tick(60)/1000
