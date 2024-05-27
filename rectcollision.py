@@ -21,10 +21,12 @@ for _ in range(60):
     obstacles.append(obstacle_rectangle)
 
 total_live = 100
-
 width = 800
 height = 400
-vel = 0.5
+vel = 2
+
+height_main_rectangle = 22
+width_main_rectangle = 22
 
 window = pyg.display.set_mode((width, height))
 clock = pyg.time.Clock()
@@ -46,7 +48,7 @@ text_retry = font_text_retry.render("PREMERE R PER UNA NUOVA PARTITA", True, col
 text_retry_rect = text_retry.get_rect()
 text_retry_rect.center = (width/2, height/1.75)
 
-main_rectangle = pyg.Rect(0, 0, 30, 30)
+main_rectangle = pyg.Rect(0, 0, height_main_rectangle, width_main_rectangle)
 pyg.draw.rect(window, color_green, main_rectangle)
 pyg.mouse.set_visible(False)
 
@@ -62,7 +64,6 @@ def main_rectangle_movements(keys, position, vel):
 
 winnig_finish_rectangle = pyg.Rect(700, 100, 100, 125)
 border_outside_rectangle = pyg.Rect(0, 300 , 800, 125)
-mouse_pace = 0.5
 
 while running:
     
@@ -89,16 +90,26 @@ while running:
     if main_rectangle.colliderect(border_outside_rectangle) and total_live != 0:
         total_live -= 1
         rectangle_color = color_red
-    
+            
+
     for obstacle in obstacles:
         pyg.draw.rect(window, color_blue, obstacle)
-    
-    
+        
     pyg.draw.rect(window, rectangle_color, main_rectangle)
     main_rectangle_key = pyg.key.get_pressed()
     main_rectangle_movements(main_rectangle_key, main_rectangle, vel)
-     
-            
+
+    if main_rectangle.colliderect(winnig_finish_rectangle) and total_live != 0:
+        window.fill("black")
+        font_text_lose = pyg.font.Font('freesansbold.ttf', 48)
+        text_lose = font_text_lose.render("HAI VINTO", False, "white")
+        textRect_lose = text_lose.get_rect()
+        textRect_lose.center = (width/2, height/3)
+        window.blit(text_lose, textRect_lose)
+        pyg.mouse.set_visible(True)
+        window.blit(text_quit_button, text_quit_rect)
+        window.blit(text_retry, text_retry_rect)    
+                 
     if total_live == 0:
         window.fill("black")
         font_text_lose = pyg.font.Font('freesansbold.ttf', 48)
@@ -113,13 +124,13 @@ while running:
     retry_button = pyg.key.get_pressed()
     exit_button = pyg.key.get_pressed()
         
-    if retry_button[pyg.K_r] and total_live == 0:
+    if retry_button[pyg.K_r]:
         total_live = 100
         obstacles = []             
         for _ in range(45):
             obstacle_rectangle = pyg.Rect(rm.randint(25, 575), rm.randint(25, 275), 25, 25)
             obstacles.append(obstacle_rectangle)
-        main_rectangle = pyg.Rect(0,0,30,30)         
+        main_rectangle = pyg.Rect(0,0,height_main_rectangle,width_main_rectangle)         
     if exit_button[pyg.K_ESCAPE]:
         running = False
     
