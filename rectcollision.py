@@ -52,6 +52,12 @@ main_rectangle = pyg.Rect(0, 0, height_main_rectangle, width_main_rectangle)
 pyg.draw.rect(window, color_green, main_rectangle)
 pyg.mouse.set_visible(False)
 
+def lose_and_win_window(text):
+    window.fill("black")
+    font_text = pyg.font.Font('freesansbold.ttf', 48)
+    text_displayed = font_text.render(text, False, "white")
+    textRect = print("Ciao")
+
 def main_rectangle_movements(keys, position, vel):
     if keys[pyg.K_w]:
         position.y -= vel * 1.8
