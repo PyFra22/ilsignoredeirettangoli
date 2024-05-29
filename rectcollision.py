@@ -32,31 +32,21 @@ window = pyg.display.set_mode((width, height))
 clock = pyg.time.Clock()
 running = True
 
-font_text_tot_life = pyg.font.Font('freesansbold.ttf', 18)
-text_life = font_text_tot_life.render("Vita totale: ", False, color_black)
-textRect_tot_life = text_life.get_rect()
-textRect_tot_life.center = (width/1.2, height/12)
-font_text_number_of_life = pyg.font.Font('freesansbold.ttf', 18)
 
-font_quit_button = pyg.font.SysFont("Arial", 24)
-text_quit_button = font_quit_button.render("QUIT", True, color_white)
-text_quit_rect = text_quit_button.get_rect()
-text_quit_rect.center = (width/2, height/2)
-
-font_text_retry = pyg.font.SysFont("Arial", 16)
-text_retry = font_text_retry.render("PREMERE R PER UNA NUOVA PARTITA", True, color_white)
-text_retry_rect = text_retry.get_rect()
-text_retry_rect.center = (width/2, height/1.75)
+def text_child(text, colortext, coordinatex, coordinatey):
+    if colortext == True:
+        colortext = color_white
+    else:
+        colortext = color_black
+    text_child_font = pyg.font.SysFont("Arial", 18)
+    text_child_render = text_child_font.render(text, True, colortext)
+    text_child_rect = text_child_render.get_rect()
+    text_child_rect.center = (width/coordinatex, height/coordinatey)
+    window.blit(text_child_render, text_child_rect)
 
 main_rectangle = pyg.Rect(0, 0, height_main_rectangle, width_main_rectangle)
 pyg.draw.rect(window, color_green, main_rectangle)
 pyg.mouse.set_visible(False)
-
-def lose_and_win_window(text):
-    window.fill("black")
-    font_text = pyg.font.Font('freesansbold.ttf', 48)
-    text_displayed = font_text.render(text, False, "white")
-    textRect = print("Ciao")
 
 def main_rectangle_movements(keys, position, vel):
     if keys[pyg.K_w]:
@@ -71,6 +61,16 @@ def main_rectangle_movements(keys, position, vel):
 winnig_finish_rectangle = pyg.Rect(700, 100, 100, 125)
 border_outside_rectangle = pyg.Rect(0, 300 , 800, 125)
 
+def lose_and_win_window(text):
+    window.fill("black")
+    font_text_parents = pyg.font.Font('freesansbold.ttf', 48)
+    text_displayed_parents = font_text_parents.render(text, True, "white")
+    text_rect = text_displayed_parents.get_rect()
+    text_rect.center = (width/2, height/3)
+    pyg.mouse.set_visible(True)
+    window.blit(text_displayed_parents, text_rect)
+
+
 while running:
     
     window.fill("white")
@@ -80,16 +80,13 @@ while running:
         if main_rectangle.colliderect(obstacle) and total_live != 0:
             total_live -= 1
             rectangle_color = color_red
-
-    text_number_of_life = font_text_number_of_life.render(str(total_live), False, color_black)
-    textRect_number_of_life = text_number_of_life.get_rect()
-    textRect_number_of_life.center = (width/1.1, height/12)
-    
+  
     if total_live < 0:
         total_live = 0
-    
-    window.blit(text_number_of_life, textRect_number_of_life)           
-    window.blit(text_life, textRect_tot_life)
+        
+    text_child(text="VITA TOTALE: ", colortext=False, coordinatex=1.2, coordinatey=12)
+    text_child(text=str(total_live), colortext=False, coordinatex=1.08, coordinatey=12)
+
 
     pyg.draw.rect(window, color_red, winnig_finish_rectangle)
     pyg.draw.rect(window, color_black, border_outside_rectangle)
@@ -97,7 +94,6 @@ while running:
         total_live -= 1
         rectangle_color = color_red
             
-
     for obstacle in obstacles:
         pyg.draw.rect(window, color_blue, obstacle)
         
@@ -106,26 +102,14 @@ while running:
     main_rectangle_movements(main_rectangle_key, main_rectangle, vel)
 
     if main_rectangle.colliderect(winnig_finish_rectangle) and total_live != 0:
-        window.fill("black")
-        font_text_lose = pyg.font.Font('freesansbold.ttf', 48)
-        text_lose = font_text_lose.render("HAI VINTO", False, "white")
-        textRect_lose = text_lose.get_rect()
-        textRect_lose.center = (width/2, height/3)
-        window.blit(text_lose, textRect_lose)
-        pyg.mouse.set_visible(True)
-        window.blit(text_quit_button, text_quit_rect)
-        window.blit(text_retry, text_retry_rect)    
+        lose_and_win_window(text="HAI VINTO")
+        text_child(text="QUIT", colortext=True, coordinatex=2, coordinatey=2)
+        text_child(text="PREMERE R PER UNA NUOVA PARTITA", colortext=True, coordinatex=2, coordinatey=1.75)  
                  
     if total_live == 0:
-        window.fill("black")
-        font_text_lose = pyg.font.Font('freesansbold.ttf', 48)
-        text_lose = font_text_lose.render("HAI PERSO", False, "white")
-        textRect_lose = text_lose.get_rect()
-        textRect_lose.center = (width/2, height/3)
-        window.blit(text_lose, textRect_lose)
-        pyg.mouse.set_visible(True)
-        window.blit(text_quit_button, text_quit_rect)
-        window.blit(text_retry, text_retry_rect)
+        lose_and_win_window(text="HAI PERSO")
+        text_child(text="QUIT", colortext=True, coordinatex=2, coordinatey=2)
+        text_child(text="PREMERE R PER UNA NUOVA PARTITA", colortext=True, coordinatex=2, coordinatey=1.75)
         
     retry_button = pyg.key.get_pressed()
     exit_button = pyg.key.get_pressed()
