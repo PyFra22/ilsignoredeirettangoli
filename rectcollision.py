@@ -5,6 +5,12 @@ import sys as sy
 
 pyg.init()
 
+width = 800
+height = 400
+window = pyg.display.set_mode((width, height))
+clock = pyg.time.Clock()
+running = True
+
 color_red = (255, 0, 0)
 color_green = (0, 255, 0)
 color_blue = (0, 0, 255)
@@ -20,43 +26,12 @@ for _ in range(60):
     rm.randint(25, 575), rm.randint(25, 275), 25, 25)
     obstacles.append(obstacle_rectangle)
 
-total_live = 100
-width = 800
-height = 400
-vel = 2
-
+main_rectangle_velocity = 2
 height_main_rectangle = 22
 width_main_rectangle = 22
-
-window = pyg.display.set_mode((width, height))
-clock = pyg.time.Clock()
-running = True
-
-
-def text_child(text, colortext, coordinatex, coordinatey):
-    if colortext == True:
-        colortext = color_white
-    else:
-        colortext = color_black
-    text_child_font = pyg.font.SysFont("Arial", 18)
-    text_child_render = text_child_font.render(text, True, colortext)
-    text_child_rect = text_child_render.get_rect()
-    text_child_rect.center = (width/coordinatex, height/coordinatey)
-    window.blit(text_child_render, text_child_rect)
-
 main_rectangle = pyg.Rect(0, 0, height_main_rectangle, width_main_rectangle)
 pyg.draw.rect(window, color_green, main_rectangle)
 pyg.mouse.set_visible(False)
-
-def main_rectangle_movements(keys, position, vel):
-    if keys[pyg.K_w]:
-        position.y -= vel * 1.8
-    if keys[pyg.K_a]:
-        position.x -= vel * 1.8
-    if keys[pyg.K_s]:
-        position.y += vel * 1.8
-    if keys[pyg.K_d]:
-        position.x += vel * 1.8 
 
 winnig_finish_rectangle = pyg.Rect(700, 100, 100, 125)
 border_outside_rectangle = pyg.Rect(0, 300 , 800, 125)
@@ -70,6 +45,28 @@ def lose_and_win_window(text):
     pyg.mouse.set_visible(True)
     window.blit(text_displayed_parents, text_rect)
 
+def text_child(text, colortext, coordinatex, coordinatey):
+    if colortext == True:
+        colortext = color_white
+    else:
+        colortext = color_black
+    text_child_font = pyg.font.SysFont("Arial", 18)
+    text_child_render = text_child_font.render(text, True, colortext)
+    text_child_rect = text_child_render.get_rect()
+    text_child_rect.center = (width/coordinatex, height/coordinatey)
+    window.blit(text_child_render, text_child_rect)
+    
+def main_rectangle_movements(keys, position, main_rectangle_velocity):
+    if keys[pyg.K_w]:
+        position.y -= main_rectangle_velocity * 1.8
+    if keys[pyg.K_a]:
+        position.x -= main_rectangle_velocity * 1.8
+    if keys[pyg.K_s]:
+        position.y += main_rectangle_velocity * 1.8
+    if keys[pyg.K_d]:
+        position.x += main_rectangle_velocity * 1.8 
+
+total_live = 100
 
 while running:
     
@@ -80,26 +77,27 @@ while running:
         if main_rectangle.colliderect(obstacle) and total_live != 0:
             total_live -= 1
             rectangle_color = color_red
-  
-    if total_live < 0:
-        total_live = 0
-        
+      
     text_child(text="VITA TOTALE: ", colortext=False, coordinatex=1.2, coordinatey=12)
     text_child(text=str(total_live), colortext=False, coordinatex=1.08, coordinatey=12)
 
-
     pyg.draw.rect(window, color_red, winnig_finish_rectangle)
     pyg.draw.rect(window, color_black, border_outside_rectangle)
+    
+
     if main_rectangle.colliderect(border_outside_rectangle) and total_live != 0:
         total_live -= 1
         rectangle_color = color_red
+    
+    if total_live < 0:
+        total_live = 0
             
     for obstacle in obstacles:
         pyg.draw.rect(window, color_blue, obstacle)
         
     pyg.draw.rect(window, rectangle_color, main_rectangle)
     main_rectangle_key = pyg.key.get_pressed()
-    main_rectangle_movements(main_rectangle_key, main_rectangle, vel)
+    main_rectangle_movements(main_rectangle_key, main_rectangle, main_rectangle_velocity)
 
     if main_rectangle.colliderect(winnig_finish_rectangle) and total_live != 0:
         lose_and_win_window(text="HAI VINTO")
@@ -135,5 +133,6 @@ while running:
         
     pyg.display.flip()
     dt = clock.tick(60)/1000
+    
 
 pyg.quit()
